@@ -212,6 +212,17 @@
         }
 
         .hero-title { letter-spacing: -0.04em; line-height: 1.0; }
+
+        .hero-gradient-text {
+            color: #5e7282;
+            background-image: linear-gradient(90deg, #1d1d1f 0%, #7893a8 100%);
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-rendering: geometricPrecision;
+        }
         
         .nav-link { position: relative; }
         .nav-link::after {
@@ -319,10 +330,10 @@
                         <span class="text-xs font-bold uppercase tracking-widest text-slateGray">Information Science & HCI</span>
                     </div>
                     <h1 class="hero-title text-5xl md:text-8xl font-bold mb-8 text-proBlack">
-                        <div class="overflow-hidden pb-2"><span class="block">Decoding</span></div>
-                        <div class="overflow-hidden pb-2"><span class="block bg-clip-text text-transparent bg-gradient-to-r from-proBlack to-iceBlue">Behavior</span></div>
-                        <div class="overflow-hidden pb-2"><span class="block">Encoding</span></div>
-                        <div class="overflow-hidden pb-2"><span class="block whitespace-nowrap bg-clip-text text-transparent bg-gradient-to-r from-proBlack to-iceBlue">Social Good</span></div>
+                        <div class="overflow-hidden pb-2"><span class="block animate-slide-up" style="animation-delay: 0.1s; opacity: 0; animation-fill-mode: forwards;">Decoding</span></div>
+                        <div class="overflow-hidden pb-2"><span class="block hero-gradient-text animate-slide-up" style="animation-delay: 0.25s; opacity: 0; animation-fill-mode: forwards;">Behavior</span></div>
+                        <div class="overflow-hidden pb-2"><span class="block animate-slide-up" style="animation-delay: 0.3s; opacity: 0; animation-fill-mode: forwards;">Encoding</span></div>
+                        <div class="overflow-hidden pb-2"><span class="block whitespace-nowrap hero-gradient-text animate-slide-up" style="animation-delay: 0.4s; opacity: 0; animation-fill-mode: forwards;">Social Good</span></div>
                     </h1>
                     <p class="text-lg md:text-xl text-slateGray leading-relaxed mb-10 max-w-xl font-normal animate-slide-up" style="animation-delay: 0.6s; opacity: 0; animation-fill-mode: forwards;">
                         I build accessible systems that leverage technology to solve complex human problems.
