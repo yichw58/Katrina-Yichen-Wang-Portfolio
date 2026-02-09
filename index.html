@@ -211,28 +211,6 @@
             text-shadow: 0 4px 30px rgba(0,0,0,0.9), 0 2px 10px rgba(0,0,0,0.7);
         }
 
-        .hero-type-text {
-            display: block;
-            min-height: 1.05em;
-        }
-
-        .hero-type-text.is-typing::after {
-            content: '';
-            display: inline-block;
-            width: 0.08em;
-            height: 0.9em;
-            margin-left: 0.12em;
-            border-radius: 999px;
-            background-color: #BDE9FF;
-            animation: heroCaretBlink 0.9s steps(1) infinite;
-            transform: translateY(0.04em);
-        }
-
-        @keyframes heroCaretBlink {
-            0%, 49% { opacity: 1; }
-            50%, 100% { opacity: 0; }
-        }
-
         .hero-title { letter-spacing: -0.04em; line-height: 1.0; }
         
         .nav-link { position: relative; }
@@ -341,10 +319,10 @@
                         <span class="text-xs font-bold uppercase tracking-widest text-slateGray">Information Science & HCI</span>
                     </div>
                     <h1 class="hero-title text-5xl md:text-8xl font-bold mb-8 text-proBlack">
-                        <div class="overflow-hidden pb-2"><span class="hero-type-text" data-text="Decoding">Decoding</span></div>
-                        <div class="overflow-hidden pb-2"><span class="hero-type-text bg-clip-text text-transparent bg-gradient-to-r from-proBlack to-iceBlue" data-text="Behavior">Behavior</span></div>
-                        <div class="overflow-hidden pb-2"><span class="hero-type-text" data-text="Encoding">Encoding</span></div>
-                        <div class="overflow-hidden pb-2"><span class="hero-type-text whitespace-nowrap bg-clip-text text-transparent bg-gradient-to-r from-proBlack to-iceBlue" data-text="Social Good">Social Good</span></div>
+                        <div class="overflow-hidden pb-2"><span class="block animate-slide-up" style="animation-delay: 0.1s; opacity: 0; animation-fill-mode: forwards;">Decoding</span></div>
+                        <div class="overflow-hidden pb-2"><span class="block bg-clip-text text-transparent bg-gradient-to-r from-proBlack to-iceBlue animate-slide-up" style="animation-delay: 0.25s; opacity: 0; animation-fill-mode: forwards;">Behavior</span></div>
+                        <div class="overflow-hidden pb-2"><span class="block animate-slide-up" style="animation-delay: 0.3s; opacity: 0; animation-fill-mode: forwards;">Encoding</span></div>
+                        <div class="overflow-hidden pb-2"><span class="block whitespace-nowrap bg-clip-text text-transparent bg-gradient-to-r from-proBlack to-iceBlue animate-slide-up" style="animation-delay: 0.4s; opacity: 0; animation-fill-mode: forwards;">Social Good</span></div>
                     </h1>
                     <p class="text-lg md:text-xl text-slateGray leading-relaxed mb-10 max-w-xl font-normal animate-slide-up" style="animation-delay: 0.6s; opacity: 0; animation-fill-mode: forwards;">
                         I build accessible systems that leverage technology to solve complex human problems.
@@ -503,7 +481,7 @@
             </a>
             <div class="flex flex-wrap justify-center gap-6 md:gap-12 mb-12 text-sm font-bold text-white/90 uppercase tracking-widest footer-text-shadow">
                 <a href="https://www.linkedin.com/in/katrina-wang1" target="_blank" class="hover:text-iceBlue transition-colors pb-1 border-b border-transparent hover:border-iceBlue">LinkedIn</a>
-                <a href="file:///Users/sabrinawang/Desktop/Transfer%20Essays/Katrina%20Yichen%20Wang-Resume-Transfer.pdf" target="_blank" class="hover:text-iceBlue transition-colors pb-1 border-b border-transparent hover:border-iceBlue">Resume</a>
+                <a href="./Katrina%20Yichen%20Wang-Resume-Transfer.pdf" target="_blank" class="hover:text-iceBlue transition-colors pb-1 border-b border-transparent hover:border-iceBlue">Resume</a>
                 <a href="https://github.com/yichw58" target="_blank" class="hover:text-iceBlue transition-colors pb-1 border-b border-transparent hover:border-iceBlue">Github</a>
             </div>
             <p class="text-white/80 text-xs font-bold tracking-wide footer-text-shadow">© 2026 Katrina Yichen Wang. Designed in California.</p>
@@ -860,51 +838,6 @@
             updateMoodboardReveal();
         }
 
-        const heroTypeLines = Array.from(document.querySelectorAll('.hero-type-text'));
-        if (heroTypeLines.length) {
-            const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-            const lines = heroTypeLines.map((node) => ({ node, text: node.dataset.text || node.textContent || '' }));
-
-            if (!reducedMotion) {
-                lines.forEach(({ node }) => { node.textContent = ''; });
-                const charsPerSecond = 24;
-
-                const typeLine = (node, text) => new Promise((resolve) => {
-                    let lastLength = -1;
-                    let startTime = 0;
-                    node.classList.add('is-typing');
-
-                    const step = (timestamp) => {
-                        if (!startTime) startTime = timestamp;
-                        const elapsed = timestamp - startTime;
-                        const currentLength = Math.min(text.length, Math.floor((elapsed / 1000) * charsPerSecond));
-
-                        if (currentLength !== lastLength) {
-                            node.textContent = text.slice(0, currentLength);
-                            lastLength = currentLength;
-                        }
-
-                        if (currentLength < text.length) {
-                            requestAnimationFrame(step);
-                        } else {
-                            node.classList.remove('is-typing');
-                            resolve();
-                        }
-                    };
-
-                    requestAnimationFrame(step);
-                });
-
-                (async () => {
-                    for (const { node, text } of lines) {
-                        await typeLine(node, text);
-                        await new Promise((resolve) => setTimeout(resolve, 120));
-                    }
-                })();
-            } else {
-                lines.forEach(({ node, text }) => { node.textContent = text; });
-            }
-        }
     </script>
 
 </body>
