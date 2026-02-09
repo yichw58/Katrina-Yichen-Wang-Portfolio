@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Katrina Yichen Wang | Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        // --- 1. GLOBAL MODAL FUNCTIONS ---
+        
+        function toggleBodyScroll(disable) {
+            document.body.style.overflow = disable ? 'hidden' : '';
+        }
+
+        function openModal(modalId, backdropId, contentId) {
+            const modal = document.getElementById(modalId);
+            const backdrop = document.getElementById(backdropId);
+            const content = document.getElementById(contentId);
+            if (!modal || !backdrop || !content) return;
+
+            if (modal._closeTimer) {
+                clearTimeout(modal._closeTimer);
+                modal._closeTimer = null;
+            }
+
+            modal.classList.remove('hidden', 'pointer-events-none');
+            backdrop.classList.add('opacity-0');
+            content.classList.remove('opacity-100', 'scale-100');
+            content.classList.add('opacity-0', 'scale-95');
+            toggleBodyScroll(true);
+
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    backdrop.classList.remove('opacity-0');
+                    content.classList.remove('opacity-0', 'scale-95');
+                    content.classList.add('opacity-100', 'scale-100');
+                });
+            });
+        }
+
+        function closeModal(modalId, backdropId, contentId) {
+            const modal = document.getElementById(modalId);
+            const backdrop = document.getElementById(backdropId);
+            const content = document.getElementById(contentId);
+            if (!modal || !backdrop || !content) return;
+
+            backdrop.classList.add('opacity-0');
+            content.classList.remove('opacity-100', 'scale-100');
+            content.classList.add('opacity-0', 'scale-95');
+            modal.classList.add('pointer-events-none');
+
+            if (modal._closeTimer) clearTimeout(modal._closeTimer);
+            modal._closeTimer = setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('pointer-events-none');
+                toggleBodyScroll(false);
+                modal._closeTimer = null;
+            }, 320);
+        }
+
+        // --- TOY DESIGN ---
+        window.openToyModal = function() {
+            openModal('toyModal', 'toyModalBackdrop', 'toyModalContent');
+        };
+        window.closeToyModal = function() {
+            closeModal('toyModal', 'toyModalBackdrop', 'toyModalContent');
+        };
+
+        // --- CTC ---
+        window.openCTCModal = function() {
+            openModal('ctcModal', 'ctcModalBackdrop', 'ctcModalContent');
+        };
+        window.closeCTCModal = function() {
+            closeModal('ctcModal', 'ctcModalBackdrop', 'ctcModalContent');
+        };
+
+        // --- LOVE FIX ---
+        window.openLoveFixModal = function() {
+            openModal('loveFixModal', 'loveFixModalBackdrop', 'loveFixModalContent');
+        };
+        window.closeLoveFixModal = function() {
+            closeModal('loveFixModal', 'loveFixModalBackdrop', 'loveFixModalContent');
+        };
+
+        // --- 2. TAILWIND CONFIG ---
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Text"', '"SF Pro Display"', '"Helvetica Neue"', 'Arial', 'sans-serif'],
+                        mono: ['"SF Mono"', 'Menlo', 'Monaco', 'Courier New', 'monospace'],
+                    },
+                    colors: {
+                        iceBlue: '#BDE9FF',
+                        proBlack: '#1D1D1F',
+                        offWhite: '#FAFAFA',
+                        slateGray: '#86868b',
+                    },
+                    boxShadow: {
+                        'soft': '0 10px 40px rgba(0,0,0,0.03)',
+                        'card': '0 20px 50px rgba(0,0,0,0.06)',
+                        'glow': '0 0 20px rgba(189, 233, 255, 0.5)',
+                    },
+                    animation: {
+                        'breathe': 'breathe 3s ease-in-out infinite',
+                        'float-slow': 'floatToy 7s ease-in-out infinite',
+                        'fade-in': 'fadeIn 0.8s ease-out forwards',
+                        'slide-up': 'slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'drive-across': 'driveAcross 10s linear infinite', 
+                        'bounce-little': 'bounceLittle 0.4s ease-in-out infinite alternate',
+                    },
+                    keyframes: {
+                        breathe: {
+                            '0%, 100%': { transform: 'scale(1)', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05)' },
+                            '50%': { transform: 'scale(1.03)', boxShadow: '0 10px 20px -3px rgba(189, 233, 255, 0.4)' },
+                        },
+                        floatToy: {
+                            '0%, 100%': { transform: 'translateY(0) rotate(0deg)' },
+                            '50%': { transform: 'translateY(-12px) rotate(1.5deg)' },
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(40px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        driveAcross: {
+                            '0%': { transform: 'translateX(20vw)' }, 
+                            '100%': { transform: 'translateX(-100vw)' } 
+                        },
+                        bounceLittle: {
+                            '0%': { transform: 'translateY(0) rotate(0deg)' },
+                            '100%': { transform: 'translateY(-8px) rotate(-3deg)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #FAFAFA;
+            color: #1D1D1F;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* 1. FIXED BACKGROUND LAYER (Bottomest) */
+        #fixed-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: 0;
+            opacity: 0;
+            filter: blur(20px) grayscale(100%);
+            background-image: url('https://i.postimg.cc/hG65FS0c/inspirations.png');
+            background-size: cover;
+            background-position: center 40%;
+            background-repeat: no-repeat;
+            pointer-events: none;
+            transition: opacity 0.1s linear, filter 0.1s linear;
+        }
+
+        /* 2. MAIN CONTENT WRAPPER (White BG covers fixed image) */
+        #main-wrapper {
+            position: relative;
+            z-index: 10;
+            background-color: #FAFAFA;
+            margin-bottom: 0;
+            box-shadow: none;
+        }
+
+        #navbar {
+            background: rgba(250, 250, 250, 0.82);
+            border-bottom: 1px solid rgba(209, 213, 219, 0.45);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+        }
+
+        #navbar::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: -18px;
+            height: 18px;
+            background: linear-gradient(to bottom, rgba(250, 250, 250, 0.6), rgba(250, 250, 250, 0));
+            pointer-events: none;
+        }
+
+        /* 3. FOOTER */
+        footer {
+            position: relative;
+            z-index: 20;
+            background-color: transparent;
+            min-height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none;
+        }
+
+        .footer-text-shadow {
+            text-shadow: 0 4px 30px rgba(0,0,0,0.9), 0 2px 10px rgba(0,0,0,0.7);
+        }
+
+        .hero-type-text {
+            display: block;
+            min-height: 1.05em;
+        }
+
+        .hero-type-text.is-typing::after {
+            content: '';
+            display: inline-block;
+            width: 0.08em;
+            height: 0.9em;
+            margin-left: 0.12em;
+            border-radius: 999px;
+            background-color: #BDE9FF;
+            animation: heroCaretBlink 0.9s steps(1) infinite;
+            transform: translateY(0.04em);
+        }
+
+        @keyframes heroCaretBlink {
+            0%, 49% { opacity: 1; }
+            50%, 100% { opacity: 0; }
+        }
+
+        .hero-title { letter-spacing: -0.04em; line-height: 1.0; }
+        
+        .nav-link { position: relative; }
+        .nav-link::after {
+            content: ''; position: absolute; width: 0; height: 1.5px; bottom: -4px; left: 0;
+            background-color: #BDE9FF; transition: width 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .nav-link:hover::after { width: 100%; }
+
+        .hover-card { transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .hover-card:hover { transform: translateY(-6px); box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.1); }
+
+        .ctc-float-wrap {
+            animation: ctcFloatY 6s ease-in-out infinite;
+            transform-origin: center;
+        }
+
+        .ctc-float-media {
+            border-radius: 18px;
+            border: 1px solid rgba(209, 213, 219, 0.75);
+            box-shadow: 0 28px 60px -28px rgba(30, 41, 59, 0.45), 0 14px 26px -18px rgba(30, 41, 59, 0.3);
+            transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+            will-change: transform;
+        }
+
+        .group:hover .ctc-float-media {
+            transform: translateY(-6px) scale(1.015);
+            box-shadow: 0 34px 70px -30px rgba(30, 41, 59, 0.5), 0 16px 30px -18px rgba(30, 41, 59, 0.36);
+        }
+
+        @keyframes ctcFloatY {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .chat-bubble { max-width: 82%; padding: 12px 16px; border-radius: 18px; font-size: 13px; line-height: 1.4; margin-bottom: 8px; position: relative; }
+        .chat-user { background-color: #007AFF; color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
+        .chat-ai { background-color: #F2F2F7; color: #1D1D1F; align-self: flex-start; border-bottom-left-radius: 4px; }
+        .glass-header { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid rgba(0,0,0,0.05); }
+
+        .iphone-frame {
+            box-shadow: 0 30px 60px -10px rgba(0,0,0,0.3), 0 10px 20px -5px rgba(0,0,0,0.2); 
+            border: 6px solid #1D1D1F; 
+        }
+        .screen-mask {
+            -webkit-mask-image: -webkit-radial-gradient(white, black); border-radius: 34px; overflow: hidden; transform: translateZ(0); height: 100%; width: 100%; background-color: white;
+        }
+        
+        .modal-enter { opacity: 0; transform: scale(0.95); }
+        .modal-enter-active { opacity: 1; transform: scale(1); transition: opacity 0.3s ease-out, transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .modal-exit { opacity: 1; transform: scale(1); }
+        .modal-exit-active { opacity: 0; transform: scale(0.95); transition: opacity 0.2s ease-in, transform 0.2s ease-in; }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        [id$="ModalBackdrop"] {
+            will-change: opacity;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            transform: translateZ(0);
+        }
+
+        [id$="ModalContent"] {
+            will-change: opacity, transform;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            transform: translateZ(0);
+        }
+    </style>
+</head>
+<body class="relative">
+
+    <!-- Fixed Background (Layer 0) -->
+    <div id="fixed-bg"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-6 md:px-8 h-20 flex items-center justify-between">
+            <a href="#" class="font-bold text-xl tracking-tight text-proBlack z-50 relative">Katrina Yichen Wang</a>
+            <div class="hidden md:flex items-center space-x-10 text-[15px] font-medium text-slateGray">
+                <a href="#work" class="nav-link hover:text-proBlack transition-colors">Work</a>
+                <a href="https://www.linkedin.com/in/katrina-wang1" target="_blank" class="hover:text-[#0077b5] transition-colors p-1" aria-label="LinkedIn">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                </a>
+            </div>
+            <button id="mobileMenuBtn" class="md:hidden z-50 p-2 text-proBlack focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            </button>
+        </div>
+        <div id="mobileMenu" class="fixed inset-0 bg-white z-40 flex flex-col items-center justify-center space-y-8 opacity-0 pointer-events-none transition-all duration-300">
+            <a href="#work" class="text-3xl font-bold text-proBlack hover:text-iceBlue transition-colors mobile-link">Work</a>
+            <a href="https://www.linkedin.com/in/katrina-wang1" target="_blank" class="text-3xl font-bold text-proBlack hover:text-[#0077b5] transition-colors mobile-link flex items-center gap-2">LinkedIn</a>
+        </div>
+    </nav>
+
+    <!-- CONTENT WRAPPER (Solid White BG) -->
+    <div id="main-wrapper">
+        
+        <!-- Hero Section -->
+        <section class="pt-20 md:pt-24 pb-6 px-6 md:px-8 max-w-7xl mx-auto relative z-10">
+            <div class="flex flex-col md:flex-row items-start justify-between gap-12 md:gap-4">
+                <div class="md:w-3/5 z-10 order-2 md:order-1 pt-4 md:pt-0">
+                    <div class="inline-flex items-center space-x-3 mb-6 animate-fade-in" style="animation-delay: 0.1s;">
+                        <span class="w-2.5 h-2.5 rounded-full bg-iceBlue shadow-glow"></span>
+                        <span class="text-xs font-bold uppercase tracking-widest text-slateGray">Information Science & HCI</span>
+                    </div>
+                    <h1 class="hero-title text-5xl md:text-8xl font-bold mb-8 text-proBlack">
+                        <div class="overflow-hidden pb-2"><span class="hero-type-text" data-text="Decoding">Decoding</span></div>
+                        <div class="overflow-hidden pb-2"><span class="hero-type-text bg-clip-text text-transparent bg-gradient-to-r from-proBlack to-iceBlue" data-text="Behavior">Behavior</span></div>
+                        <div class="overflow-hidden pb-2"><span class="hero-type-text" data-text="Encoding">Encoding</span></div>
+                        <div class="overflow-hidden pb-2"><span class="hero-type-text whitespace-nowrap bg-clip-text text-transparent bg-gradient-to-r from-proBlack to-iceBlue" data-text="Social Good">Social Good</span></div>
+                    </h1>
+                    <p class="text-lg md:text-xl text-slateGray leading-relaxed mb-10 max-w-xl font-normal animate-slide-up" style="animation-delay: 0.6s; opacity: 0; animation-fill-mode: forwards;">
+                        I build accessible systems that leverage technology to solve complex human problems.
+                    </p>
+                    <div class="flex gap-6 animate-slide-up" style="animation-delay: 0.8s; opacity: 0; animation-fill-mode: forwards;">
+                        <a href="#work" class="animate-breathe px-8 md:px-10 py-4 bg-proBlack text-white rounded-full text-[15px] font-medium transition-all hover:bg-gray-800 hover:shadow-lg">View Selected Work</a>
+                    </div>
+                </div>
+                <div class="md:w-2/5 flex justify-end items-center order-1 md:order-2 animate-fade-in w-full">
+                    <div class="relative w-72 h-72 md:w-96 md:h-96 rounded-full shadow-card overflow-hidden hover:scale-105 transition-transform duration-700 md:mt-10 flex-shrink-0">
+                        <img src="https://i.postimg.cc/rmzMjFwC/IMG-0921.jpg" alt="Katrina Yichen Wang" class="w-full h-full object-cover object-top">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="work" class="px-6 md:px-8 pt-12 pb-32 max-w-7xl mx-auto relative z-10">
+            <div class="flex items-center gap-6 mb-16">
+                 <h2 class="text-3xl font-bold text-proBlack tracking-tight">Selected Work</h2>
+                 <div class="h-px bg-gray-200/70 flex-grow"></div>
+            </div>
+            
+            <!-- 1. CTC -->
+            <div onclick="window.openCTCModal()" class="bg-white rounded-[36px] overflow-hidden hover-card group cursor-pointer shadow-soft border border-gray-100/50 block mb-16">
+                <div class="grid md:grid-cols-2 min-h-[500px] bg-white">
+                    <div class="p-10 md:p-16 flex flex-col justify-center order-2 md:order-1 relative">
+                        <div class="absolute top-0 left-0 w-32 h-32 bg-iceBlue/10 rounded-br-full -z-10"></div>
+                        <div class="flex flex-row flex-wrap items-center gap-2 mb-6">
+                            <span class="bg-offWhite border border-gray-100 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider text-slateGray whitespace-nowrap">Health Informatics</span>
+                            <span class="bg-offWhite border border-gray-100 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider text-slateGray whitespace-nowrap">Information System Design</span>
+                        </div>
+                        <h3 class="text-3xl md:text-4xl font-bold mb-5 text-proBlack">Healthcare for All</h3>
+                        <p class="text-slateGray text-lg mb-10 leading-relaxed">
+                            Redesigning workflows for the Celebrating Life Community Health Center. An accessible dashboard bridging the gap between doctors and underserved patients in Orange County.
+                        </p>
+                        <span class="text-sm font-bold text-proBlack border-b border-proBlack pb-0.5 inline-block w-max group-hover:text-iceBlue group-hover:border-iceBlue transition-colors">View Case Study</span>
+                    </div>
+                    <div class="relative order-1 md:order-2 flex items-center justify-center p-10 overflow-visible bg-white">
+                        <div class="ctc-float-wrap w-full flex items-center justify-center">
+                            <img src="https://i.postimg.cc/N0PSFYWk/Provider-Management-Master-(Samir).png" class="ctc-float-media w-[95%] h-auto" alt="CTC Dashboard">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Love Fix -->
+            <div onclick="window.openLoveFixModal()" class="relative block mb-16 cursor-pointer group rounded-[36px] shadow-soft hover-card border border-gray-100/50 overflow-hidden">
+                <div class="grid md:grid-cols-2 min-h-[500px] bg-white">
+                    <div class="p-10 md:p-16 flex flex-col justify-center relative bg-white">
+                         <div class="flex flex-row flex-wrap items-center gap-2 mb-6">
+                            <span class="bg-offWhite border border-gray-100 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider text-slateGray">AI & Mental Health</span>
+                            <span class="bg-offWhite border border-gray-100 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider text-slateGray">HCI</span>
+                        </div>
+                        <h3 class="text-3xl md:text-4xl font-bold mb-5 text-proBlack">Love Fix</h3>
+                        <p class="text-slateGray text-lg mb-8 leading-relaxed">
+                            A compassionate AI companion designed to help individuals with social anxiety navigate complex interpersonal dynamics.
+                        </p>
+                        <span class="text-sm font-bold text-proBlack border-b border-proBlack pb-0.5 inline-block w-max group-hover:text-iceBlue group-hover:border-iceBlue transition-colors">View Case Study</span>
+                    </div>
+                    <div class="relative bg-white order-1 md:order-2 flex items-center justify-center p-8 overflow-hidden pointer-events-auto">
+                        <div class="relative w-[230px] h-[480px] bg-black rounded-[46px] iphone-frame transform transition-transform duration-700 group-hover:scale-[1.02] flex items-center justify-center">
+                            <div class="relative w-[218px] h-[468px] bg-white rounded-[40px] screen-mask w-full h-full flex flex-col">
+                                <div class="absolute top-3 left-1/2 -translate-x-1/2 w-[70px] h-[22px] bg-black rounded-full z-50"></div>
+                                <div class="pt-12 pb-3 px-4 glass-header flex justify-between items-center sticky top-0 z-40 shrink-0">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-5 h-5 rounded-full bg-gradient-to-tr from-iceBlue to-blue-500"></div><span class="font-semibold text-xs text-proBlack">Love Fix</span>
+                                    </div>
+                                    <span class="text-[10px] text-blue-500 font-medium">Settings</span>
+                                </div>
+                                <div class="p-3 flex flex-col flex-1 bg-white pb-24 overflow-y-auto no-scrollbar pointer-events-auto z-30" onmousedown="event.stopPropagation()">
+                                    <div class="text-[10px] text-center text-gray-400 font-medium mb-6 uppercase tracking-wide">Today 8:42 PM</div>
+                                    <div class="chat-bubble chat-user ml-auto">I'm really nervous about meeting him. What if I run out of things to say? 😰</div>
+                                    <div class="flex items-center gap-2 ml-2 mb-2 mt-1 animate-pulse" style="animation-delay: 0.5s;">
+                                        <div class="w-1.5 h-1.5 rounded-full bg-iceBlue animate-pulse"></div><span class="text-[10px] text-gray-400 font-medium tracking-wide">ANALYZING...</span>
+                                    </div>
+                                    <div class="chat-bubble chat-ai flex flex-col gap-2 border border-gray-100" style="animation-delay: 0.8s;">
+                                        <p>That's a completely normal feeling! 🌱 High anxiety is detected.</p>
+                                    </div>
+                                    <div class="bg-iceBlue/10 p-3 rounded-xl ml-1 mt-2 border border-iceBlue/20 w-[95%]" style="animation-delay: 1s;">
+                                        <div class="text-[10px] font-bold text-blue-500 mb-1 uppercase">Recommended Topic</div><p class="text-xs text-slateGray">"I saw you went to Japan last year, what was the best food you ate?"</p>
+                                    </div>
+                                    <div class="h-8 shrink-0"></div>
+                                </div>
+                                <div class="absolute bottom-0 w-full bg-white border-t border-gray-100 p-3 pb-5 z-40 pointer-events-none">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 flex-shrink-0"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg></div>
+                                        <div class="flex-grow bg-gray-100 rounded-full h-8 px-3 flex items-center text-xs text-gray-500 truncate">Type message...</div>
+                                        <div class="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white shadow-sm flex-shrink-0"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Shared Sky -->
+            <a href="https://devpost.com/software/2nd-degree?ref_content=my-projects-tab&ref_feature=my_projects" target="_blank" class="block mb-16">
+                <div class="relative bg-black rounded-[36px] overflow-hidden text-white hover-card group shadow-soft h-[500px] flex items-center" id="skyContainer">
+                    <canvas id="skyCanvas" class="absolute inset-0 w-full h-full z-0 cursor-move"></canvas>
+                    <div class="absolute inset-0 bg-gradient-to-r from-black via-black/50 to-transparent z-10 pointer-events-none"></div>
+                    <div class="relative z-20 p-10 md:p-16 max-w-xl pointer-events-none">
+                        <div class="flex flex-row flex-wrap items-center gap-2 mb-6">
+                            <span class="text-iceBlue text-xs font-bold uppercase tracking-widest border border-iceBlue/50 px-3 py-1.5 rounded-full shadow-md backdrop-blur-sm bg-black/20">Hackathon Winner</span>
+                            <span class="text-white border border-white/30 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider shadow-md backdrop-blur-sm bg-black/20">Data Viz</span>
+                        </div>
+                        <h3 class="text-3xl md:text-4xl font-bold mb-5 drop-shadow-[0_4px_10px_rgba(0,0,0,1)]">Shared Sky</h3>
+                        <p class="text-gray-100 text-lg leading-relaxed mb-8 font-medium drop-shadow-[0_2px_4px_rgba(0,0,0,1)] max-w-md">
+                            Visualizing social connections as a living galaxy. A React & FastAPI powered experience that reveals the hidden constellations in our networks.
+                        </p>
+                         <span class="text-sm font-bold text-iceBlue hover:text-white transition-all flex items-center gap-2 drop-shadow-md pointer-events-auto cursor-pointer">
+                            View Project on Devpost <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                        </span>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- 4. Toy Design (Clickable) -->
+            <div onclick="window.openToyModal()" class="bg-white border border-gray-100/50 rounded-[36px] overflow-hidden hover-card group cursor-pointer shadow-soft mb-16 relative">
+                 <div class="grid md:grid-cols-2 min-h-[500px] relative z-10">
+                    <div class="p-10 md:p-16 flex flex-col justify-center order-2 md:order-1 relative bg-white z-10 pointer-events-none">
+                        <div class="flex flex-row flex-wrap items-center gap-2 mb-6">
+                            <span class="bg-white border border-gray-200 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider text-slateGray whitespace-nowrap">Product Design</span>
+                            <span class="bg-white border border-gray-200 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider text-slateGray whitespace-nowrap">User Experience</span>
+                        </div>
+                        <h3 class="text-3xl md:text-4xl font-bold text-proBlack mb-5">
+                            Toy Design
+                        </h3>
+                        <p class="text-slateGray text-lg leading-relaxed mb-8">
+                            Explorations in modular structures and interactive play. Modeled for creative assembly and social interaction.
+                        </p>
+                        <span class="text-sm font-bold text-proBlack border-b border-proBlack pb-0.5 inline-block w-max group-hover:text-iceBlue group-hover:border-iceBlue transition-colors">
+                            View Prototype Details
+                        </span>
+                    </div>
+                    <div class="h-full relative bg-white overflow-hidden order-1 md:order-2 flex items-center justify-center p-8 pointer-events-none">
+                        <img src="https://i.postimg.cc/6q41Ckhy/Chat-GPT-Image-Jan-15-2026-12-17-56-PM.png" class="relative z-10 w-full h-full object-contain group-hover:scale-105 transition-transform duration-700" style="filter: drop-shadow(0 20px 40px rgba(0,0,0,0.05));" alt="Toy Design Vector Art">
+                    </div>
+                 </div>
+                 <div class="absolute bottom-12 right-0 z-30 w-48 md:w-64 animate-drive-across pointer-events-none" style="animation-delay: -4s;">
+                    <img src="https://i.postimg.cc/FF0Rx7nj/Chat-GPT-Image-Jan-15-2026-11-50-19-AM.png" class="w-full h-auto object-contain animate-bounce-little scale-x-[-1]" style="filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1));" alt="Penguin Driving">
+                 </div>
+            </div>
+        </section>
+
+    </div> 
+    <!-- END CONTENT WRAPPER -->
+
+    <!-- Footer / Moodboard Reveal Section -->
+    <footer id="contact">
+        <div class="pointer-events-auto text-center px-4 mt-20 relative z-20">
+            <span class="text-iceBlue font-bold tracking-widest uppercase text-sm mb-4 block footer-text-shadow">Available for opportunities</span>
+            <a href="mailto:yichw58@uci.edu" class="footer-text-shadow text-5xl md:text-7xl font-bold text-white hover:text-iceBlue transition-colors animate-breathe inline-block mb-12">
+                Let's Connect &rarr;
+            </a>
+            <div class="flex flex-wrap justify-center gap-6 md:gap-12 mb-12 text-sm font-bold text-white/90 uppercase tracking-widest footer-text-shadow">
+                <a href="https://www.linkedin.com/in/katrina-wang1" target="_blank" class="hover:text-iceBlue transition-colors pb-1 border-b border-transparent hover:border-iceBlue">LinkedIn</a>
+                <a href="file:///Users/sabrinawang/Desktop/Transfer%20Essays/Katrina%20Yichen%20Wang-Resume-Transfer.pdf" target="_blank" class="hover:text-iceBlue transition-colors pb-1 border-b border-transparent hover:border-iceBlue">Resume</a>
+                <a href="https://github.com/yichw58" target="_blank" class="hover:text-iceBlue transition-colors pb-1 border-b border-transparent hover:border-iceBlue">Github</a>
+            </div>
+            <p class="text-white/80 text-xs font-bold tracking-wide footer-text-shadow">© 2026 Katrina Yichen Wang. Designed in California.</p>
+        </div>
+    </footer>
+
+    <!-- CTC MODAL -->
+    <div id="ctcModal" class="fixed inset-0 z-[100] hidden">
+        <div class="absolute inset-0 bg-white/95 backdrop-blur-md transition-opacity opacity-0" id="ctcModalBackdrop"></div>
+        <div class="absolute inset-0 overflow-y-auto no-scrollbar">
+            <div class="min-h-full p-6 md:p-12 flex flex-col items-center opacity-0 transform scale-95 transition-all duration-300 delay-100" id="ctcModalContent">
+                <button onclick="window.closeCTCModal()" class="fixed top-6 right-6 z-50 p-3 rounded-full bg-white shadow-card hover:scale-110 transition-transform text-proBlack group">
+                    <svg class="w-6 h-6 group-hover:rotate-90 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+                <div class="max-w-6xl w-full pb-20"> 
+                    <div class="text-center mb-16 mt-12">
+                        <!-- PILL TAGS - Horizontal -->
+                        <div class="flex flex-row flex-wrap justify-center gap-3 mb-6">
+                            <span class="bg-gray-50 border border-gray-200 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider text-slateGray">UX Design</span>
+                            <span class="bg-gray-50 border border-gray-200 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider text-slateGray">Social Impact</span>
+                        </div>
+                        <h2 class="text-4xl md:text-6xl font-bold text-proBlack mb-6">Healthcare for All</h2>
+                        <p class="text-slateGray max-w-2xl mx-auto text-lg">
+                            Offers affordable health care in Orange County, through a network of 34+ providers.
+                        </p>
+                        <div class="flex flex-row flex-wrap justify-center mt-4 gap-3">
+                            <span class="bg-gray-50 border border-gray-200 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider text-slateGray">Mid-fi Prototype</span>
+                            <span class="bg-gray-50 border border-gray-200 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider text-slateGray">Under Development</span>
+                        </div>
+                        <br>
+                         <a href="https://ctc-uci.com/About" target="_blank" class="inline-block mt-6 text-sm font-bold text-iceBlue border-b border-iceBlue pb-0.5 hover:text-proBlack hover:border-proBlack transition-colors">
+                            Visit Live Site / Meet the Team &rarr;
+                        </a>
+                    </div>
+                    <!-- (Rest of content same) -->
+                     <div class="grid md:grid-cols-2 gap-8 mb-20"><div class="bg-gray-50 p-8 rounded-3xl border border-gray-100"><h4 class="text-lg font-bold text-proBlack mb-4 flex items-center gap-2"><span class="w-6 h-6 rounded-full bg-red-100 text-red-500 flex items-center justify-center text-xs">!</span>The Challenge</h4><p class="text-slateGray leading-relaxed text-sm">The center relied on a <strong>manual, fragmented process</strong> to track and manage daily provider appointment goals. This led to high <strong class="text-proBlack">cognitive load</strong> for staff, potential data integrity issues, and overscheduling that affected patient care quality.</p></div><div class="bg-gray-50 p-8 rounded-3xl border border-gray-100"><h4 class="text-lg font-bold text-proBlack mb-4 flex items-center gap-2"><span class="w-6 h-6 rounded-full bg-green-100 text-green-500 flex items-center justify-center text-xs">✓</span>The Solution</h4><p class="text-slateGray leading-relaxed text-sm">A <strong>scalable, centralized platform</strong> featuring a provider directory and real-time quota tracking. We utilized <strong class="text-proBlack">heuristic evaluation</strong> to ensure the interface is intuitive for non-technical staff, streamlining operations and ensuring compliance.</p></div></div><div class="mb-24"><h3 class="text-2xl font-bold text-proBlack mb-6">Quota Management System</h3><p class="text-slateGray mb-8 max-w-3xl">Key UX Decision: To reduce context switching, we implemented a <strong>contextual sidebar</strong> for quota creation. Admins can view monthly goals at a glance and adjust quotas without leaving the master list view.</p><div class="flex flex-col md:flex-row gap-8 items-start"><div class="w-full md:w-3/4"><img src="https://i.postimg.cc/t4bjGqjM/Quota-Tracking-Master.png" class="w-full h-auto rounded-xl shadow-lg border border-gray-200" alt="Quota Tracking Master"><p class="text-xs text-slateGray mt-3 ml-1">Real-time data visualization for monthly quotas.</p></div><div class="w-full md:w-1/4 px-4"><img src="https://i.postimg.cc/yNJnfRb3/Create-Quota-Side-Bar-2.png" class="w-full h-auto rounded-xl shadow-xl border border-gray-200" alt="Create Quota Sidebar"><p class="text-xs text-slateGray mt-3 ml-1">Slide-over panel for quick actions.</p></div></div></div><div class="mb-12"><h3 class="text-2xl font-bold text-proBlack mb-6">Provider Directory & Profiles</h3><p class="text-slateGray mb-8 max-w-3xl">A centralized directory allows for quick lookup of provider details. The information architecture was restructured to prioritize critical status info (e.g., active/inactive) and contact details.</p><div class="flex flex-col md:flex-row gap-8 items-start"><div class="w-full md:w-3/4"><img src="https://i.postimg.cc/N0PSFYWk/Provider-Management-Master-(Samir).png" class="w-full h-auto rounded-xl shadow-lg border border-gray-200" alt="Provider Directory"><p class="text-xs text-slateGray mt-3 ml-1">Master list with status indicators and search.</p></div><div class="w-full md:w-1/4 px-4"><img src="https://i.postimg.cc/QMnwCsRQ/Provider-Profile.png" class="w-full h-auto rounded-xl shadow-xl border border-gray-200" alt="Provider Profile"><p class="text-xs text-slateGray mt-3 ml-1">Detailed view with edit capabilities.</p></div></div></div><div class="mt-20 p-8 bg-iceBlue/10 rounded-3xl text-center"><h4 class="text-lg font-bold text-proBlack mb-2">Design Impact</h4><p class="text-slateGray max-w-2xl mx-auto">By digitizing this workflow, we anticipate a <strong class="text-proBlack">40% reduction in scheduling errors</strong> and a significant decrease in administrative time spent on manual tracking.</p></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LOVE FIX MODAL -->
+    <div id="loveFixModal" class="fixed inset-0 z-[100] hidden">
+        <div class="absolute inset-0 bg-white/95 backdrop-blur-md transition-opacity opacity-0" id="loveFixModalBackdrop"></div>
+        <div class="absolute inset-0 overflow-y-auto no-scrollbar">
+            <div class="min-h-full p-6 md:p-12 flex flex-col items-center opacity-0 transform scale-95 transition-all duration-300 delay-100" id="loveFixModalContent">
+                <button onclick="window.closeLoveFixModal()" class="fixed top-6 right-6 z-50 p-3 rounded-full bg-white shadow-card hover:scale-110 transition-transform text-proBlack group">
+                    <svg class="w-6 h-6 group-hover:rotate-90 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+                <div class="max-w-4xl w-full pb-20">
+                     <!-- Modal Header -->
+                    <div class="text-center mb-16 mt-12">
+                         <!-- PILL TAGS - Horizontal -->
+                        <div class="flex flex-row flex-wrap justify-center gap-3 mb-6">
+                            <span class="bg-gray-50 border border-gray-200 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider text-slateGray">Relationship AI</span>
+                            <span class="bg-gray-50 border border-gray-200 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider text-slateGray">Wellness</span>
+                        </div>
+                        <h2 class="text-4xl md:text-6xl font-bold text-proBlack mb-6">Love Fix</h2>
+                        <p class="text-slateGray max-w-2xl mx-auto text-lg">
+                            Decoding human connection in a digital age. An AI companion for fostering healthy relationships and personal growth.
+                        </p>
+                    </div>
+                    <!-- (Content same) -->
+                    <div class="grid md:grid-cols-12 gap-12 items-start"><div class="md:col-span-5 flex justify-center sticky top-20"><div class="relative w-[280px] h-[580px] bg-black rounded-[46px] iphone-frame transform transition-transform duration-700 hover:scale-[1.02] shadow-2xl"><div class="relative w-full h-full bg-white rounded-[40px] screen-mask flex flex-col"><div class="absolute top-3 left-1/2 -translate-x-1/2 w-[80px] h-[24px] bg-black rounded-full z-50"></div><div class="pt-12 pb-3 px-4 glass-header flex justify-between items-center sticky top-0 z-40 shrink-0"><div class="flex items-center gap-2"><div class="w-5 h-5 rounded-full bg-gradient-to-tr from-iceBlue to-blue-500"></div><span class="font-semibold text-sm text-proBlack">Love Fix</span></div><span class="text-xs text-blue-500 font-medium">Settings</span></div><div class="p-4 flex flex-col h-full bg-white pb-40 overflow-y-auto no-scrollbar"><div class="text-[10px] text-center text-gray-400 font-medium mb-4 uppercase tracking-wide">Coach Mode Active</div><div class="chat-bubble chat-user ml-auto">I feel like I'm always the one reaching out first. It's exhausting. 😓</div><div class="flex items-center gap-2 ml-2 mb-2 mt-2"><div class="w-1.5 h-1.5 rounded-full bg-iceBlue animate-pulse"></div><span class="text-[10px] text-gray-400 font-medium tracking-wide">ANALYZING PATTERNS...</span></div><div class="chat-bubble chat-ai flex flex-col gap-2 border border-gray-100 bg-gray-50"><div class="flex gap-2 mb-1"><span class="bg-purple-100 text-purple-600 text-[10px] font-bold px-2 py-0.5 rounded">Anxious-Preoccupied</span></div><p class="text-sm">This reflects an attachment trigger. You are seeking validation of connection through frequency of contact.</p></div><div class="bg-iceBlue/10 p-4 rounded-xl mt-2 border border-iceBlue/20"><div class="text-[10px] font-bold text-blue-600 mb-2 uppercase flex items-center gap-1"><svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>Try the "Mirroring Method"</div><p class="text-xs text-slateGray leading-relaxed">Match their energy for 24 hours. Observe your own feelings without judgment. Do not initiate new texts unless necessary.</p><button class="mt-3 w-full py-1.5 bg-white border border-iceBlue/30 rounded text-[10px] font-bold text-blue-500 hover:bg-blue-50 transition-colors">Start 24h Challenge</button></div><div class="h-12 shrink-0"></div></div><div class="absolute bottom-0 w-full bg-white border-t border-gray-100 p-3 pb-6 z-40"><div class="flex items-center gap-2"><div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-400 flex-shrink-0"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg></div><div class="flex-grow bg-gray-100 rounded-full h-9 px-4 flex items-center text-sm text-gray-400 truncate">Type your reflection...</div><div class="w-9 h-9 rounded-full bg-blue-500 flex items-center justify-center text-white shadow-sm flex-shrink-0"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg></div></div></div></div></div></div><div class="md:col-span-7 space-y-12"><div><h3 class="text-2xl font-bold text-proBlack mb-6">User Research Data</h3><p class="text-slateGray text-sm mb-8">Based on a survey of 19-21 year olds regarding relationship mental health.</p><div class="grid grid-cols-2 gap-8"><div class="bg-gray-50 rounded-2xl p-6 border border-gray-100 flex flex-col items-center"><div class="relative w-32 h-32 mb-4"><div class="w-full h-full rounded-full" style="background: conic-gradient(#1D1D1F 0% 50%, #BDE9FF 50% 100%);"></div><div class="absolute inset-2 bg-white rounded-full flex items-center justify-center"><span class="text-3xl font-bold text-proBlack">50%</span></div></div><p class="text-xs font-bold text-proBlack text-center uppercase tracking-wide">Felt Lonely or Anxious</p><p class="text-[10px] text-slateGray text-center mt-1">in the past 3 months</p></div><div class="bg-gray-50 rounded-2xl p-6 border border-gray-100 flex flex-col justify-center"><div class="space-y-4"><div><div class="flex justify-between text-xs font-bold text-proBlack mb-1"><span>Seek Help</span><span>70%</span></div><div class="w-full bg-gray-200 rounded-full h-2"><div class="bg-iceBlue h-2 rounded-full" style="width: 70%"></div></div></div><div><div class="flex justify-between text-xs font-bold text-proBlack mb-1"><span>Take No Action</span><span class="text-red-400">30%</span></div><div class="w-full bg-gray-200 rounded-full h-2"><div class="bg-proBlack h-2 rounded-full" style="width: 30%"></div></div></div></div><p class="text-xs font-bold text-proBlack text-center uppercase tracking-wide mt-6">Response to Issues</p></div></div></div><div><h3 class="text-2xl font-bold text-proBlack mb-4">Beyond Matching</h3><p class="text-slateGray leading-relaxed mb-4">Inspired by mental health promotion programs, Love Fix is a <span class="text-proBlack font-medium">non-clinical alternative</span> that bridges the gap between dating apps and therapy.</p><ul class="space-y-3"><li class="flex items-start gap-3"><span class="w-6 h-6 rounded-full bg-iceBlue/30 flex-shrink-0 flex items-center justify-center text-iceBlue text-xs mt-0.5">1</span><span class="text-slateGray text-sm"><strong class="text-proBlack">Situational Coaching:</strong> Real-time advice for complex social dynamics, not just "swiping right".</span></li><li class="flex items-start gap-3"><span class="w-6 h-6 rounded-full bg-iceBlue/30 flex-shrink-0 flex items-center justify-center text-iceBlue text-xs mt-0.5">2</span><span class="text-slateGray text-sm"><strong class="text-proBlack">Self-Insight:</strong> Analysis of attachment styles and emotional needs to foster long-term growth.</span></li><li class="flex items-start gap-3"><span class="w-6 h-6 rounded-full bg-iceBlue/30 flex-shrink-0 flex items-center justify-center text-iceBlue text-xs mt-0.5">3</span><span class="text-slateGray text-sm"><strong class="text-proBlack">Communication Guidance:</strong> Helping users articulate feelings and navigate conflict with confidence.</span></li></ul></div><div class="bg-proBlack text-white p-8 rounded-3xl relative overflow-hidden"><div class="relative z-10"><h3 class="text-xl font-bold mb-2">Market & Growth</h3><p class="text-gray-400 text-sm mb-4">Targeting Gen Z (16-24) via TikTok & Campus Ambassadors.</p><div class="inline-block border border-white/20 px-3 py-1 rounded-full text-xs font-mono text-iceBlue">Model: Freemium + Subscription</div></div><div class="absolute right-0 bottom-0 opacity-10 transform translate-x-1/4 translate-y-1/4"><svg class="w-32 h-32" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg></div></div></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- TOY DESIGN MODAL -->
+    <div id="toyModal" class="fixed inset-0 z-[100] hidden">
+        <div class="absolute inset-0 bg-white/95 backdrop-blur-md transition-opacity opacity-0" id="toyModalBackdrop"></div>
+        <div class="absolute inset-0 overflow-y-auto no-scrollbar">
+            <div class="min-h-full p-6 md:p-12 flex flex-col items-center opacity-0 transform scale-95 transition-all duration-300 delay-100" id="toyModalContent">
+                <button onclick="window.closeToyModal()" class="fixed top-6 right-6 z-50 p-3 rounded-full bg-white shadow-card hover:scale-110 transition-transform text-proBlack group">
+                    <svg class="w-6 h-6 group-hover:rotate-90 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+                <div class="max-w-4xl w-full pb-20">
+                    <div class="text-center mb-16 mt-12">
+                         <!-- PILL TAGS - Horizontal -->
+                        <div class="flex flex-row flex-wrap justify-center gap-3 mb-6">
+                            <span class="bg-gray-50 border border-gray-200 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider text-slateGray">Product Design</span>
+                            <span class="bg-gray-50 border border-gray-200 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider text-slateGray">User Experience</span>
+                        </div>
+                        <h2 class="text-4xl md:text-6xl font-bold text-proBlack mb-6">Toy Design</h2>
+                        <p class="text-slateGray max-w-2xl mx-auto text-lg">
+                            Redefining playground interactions through modular and interactive structures. A study in creativity, collaboration, and joy.
+                        </p>
+                    </div>
+                    <!-- (Rest of Toy Design Modal Content) -->
+                    <div class="mb-24"><div class="bg-iceBlue/20 rounded-[40px] p-8 md:p-16 flex items-center justify-center shadow-sm border border-iceBlue/10 mb-10 relative overflow-hidden group"><img src="https://i.postimg.cc/FF0Rx7nj/Chat-GPT-Image-Jan-15-2026-11-50-19-AM.png" class="w-[80%] h-auto object-contain drop-shadow-2xl group-hover:scale-105 transition-transform duration-700" alt="Penguin Toy Detail"></div><div class="text-center max-w-2xl mx-auto"><h3 class="text-3xl font-bold text-proBlack mb-4">Co-Op Penguin Walker</h3><p class="text-slateGray text-lg leading-relaxed mb-6">An interactive walker designed for toddlers learning to take their first steps. The magic lies in collaboration: <span class="text-proBlack font-medium">the wings only flap when two penguins are placed on the cart together</span>, encouraging social interaction and shared play from an early age.</p><div class="flex flex-wrap justify-center gap-3"><span class="bg-gray-50 border border-gray-100 px-4 py-1.5 rounded-full text-xs font-bold text-slateGray uppercase tracking-wide">Toddlers (1-3)</span><span class="bg-gray-50 border border-gray-100 px-4 py-1.5 rounded-full text-xs font-bold text-slateGray uppercase tracking-wide">Interactive Mechanism</span><span class="bg-gray-50 border border-gray-100 px-4 py-1.5 rounded-full text-xs font-bold text-slateGray uppercase tracking-wide">Collaborative Play</span></div></div></div>
+                    <div><div class="bg-white rounded-[40px] p-8 md:p-16 flex items-center justify-center shadow-sm border border-gray-100 mb-10 relative overflow-hidden group"><img src="https://i.postimg.cc/6q41Ckhy/Chat-GPT-Image-Jan-15-2026-12-17-56-PM.png" class="w-full h-auto object-contain drop-shadow-2xl group-hover:scale-105 transition-transform duration-700" alt="Inflatable Castle Full View"></div><div class="text-center max-w-2xl mx-auto"><h3 class="text-3xl font-bold text-proBlack mb-4">Modular Inflatable Castle</h3><p class="text-slateGray text-lg leading-relaxed mb-6">A large-scale modular construction kit for children aged 6-12. Unlike static bounce houses, this system empowers kids to <span class="text-proBlack font-medium">design and assemble their own fortress</span> using interchangeable pneumatic modules, fostering spatial reasoning and engineering skills.</p><div class="flex flex-wrap justify-center gap-3"><span class="bg-gray-50 border border-gray-100 px-4 py-1.5 rounded-full text-xs font-bold text-slateGray uppercase tracking-wide">Kids (6-12)</span><span class="bg-gray-50 border border-gray-100 px-4 py-1.5 rounded-full text-xs font-bold text-slateGray uppercase tracking-wide">Modular System</span><span class="bg-gray-50 border border-gray-100 px-4 py-1.5 rounded-full text-xs font-bold text-slateGray uppercase tracking-wide">Spatial Design</span></div></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // ... (Canvas and Scroll Logic same as above)
+        
+        // Canvas & Other Scripts (performance tuned)
+        const canvas = document.getElementById('skyCanvas');
+        if (canvas) {
+            const ctx = canvas.getContext('2d', { alpha: true });
+            const skyContainer = document.getElementById('skyContainer');
+            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const isSmallScreen = window.matchMedia('(max-width: 900px)').matches;
+            const deviceMemory = navigator.deviceMemory || 4;
+            const lowPowerMode = prefersReducedMotion || isSmallScreen || deviceMemory <= 4;
+
+            let width = 0;
+            let height = 0;
+            let particles = [];
+            let stars = [];
+            let meteors = [];
+            const numParticles = lowPowerMode ? 110 : 220;
+            const numStars = lowPowerMode ? 70 : 140;
+            const numMeteors = lowPowerMode ? 1 : 2;
+            const targetFps = lowPowerMode ? 24 : 40;
+            const frameInterval = 1000 / targetFps;
+
+            // Mouse interaction vars
+            let mouseX = 0;
+            let mouseY = 0;
+            let targetRotationX = 0;
+            let targetRotationY = 0;
+            let rotationX = 0;
+            let rotationY = 0;
+
+            let rafId = null;
+            let lastFrameTime = 0;
+            let isVisible = !document.hidden;
+            let isInViewport = true;
+
+            function resize() {
+                if (!skyContainer) return;
+                const rect = skyContainer.getBoundingClientRect();
+                const dpr = Math.min(window.devicePixelRatio || 1, lowPowerMode ? 1.25 : 1.5);
+                width = Math.max(1, rect.width);
+                height = Math.max(1, rect.height);
+                canvas.width = Math.floor(width * dpr);
+                canvas.height = Math.floor(height * dpr);
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                init();
+                drawFrame();
+            }
+
+            window.addEventListener('resize', resize, { passive: true });
+            if (skyContainer) {
+                skyContainer.addEventListener('mousemove', (e) => {
+                    const rect = canvas.getBoundingClientRect();
+                    mouseX = ((e.clientX - rect.left) / width) * 2 - 1;
+                    mouseY = ((e.clientY - rect.top) / height) * 2 - 1;
+                }, { passive: true });
+            }
+
+            class Particle {
+                constructor() {
+                    this.theta = Math.random() * Math.PI * 2;
+                    this.phi = Math.acos((Math.random() * 2) - 1);
+                    this.radius = 120; 
+                }
+
+                draw(rotX, rotY) {
+                    let x = this.radius * Math.sin(this.phi) * Math.cos(this.theta);
+                    let y = this.radius * Math.sin(this.phi) * Math.sin(this.theta);
+                    let z = this.radius * Math.cos(this.phi);
+
+                    // Rotate Y
+                    let tempX = x * Math.cos(rotY) - z * Math.sin(rotY);
+                    let tempZ = x * Math.sin(rotY) + z * Math.cos(rotY);
+                    x = tempX; z = tempZ;
+
+                    // Rotate X
+                    let tempY = y * Math.cos(rotX) - z * Math.sin(rotX);
+                    z = y * Math.sin(rotX) + z * Math.cos(rotX);
+                    y = tempY;
+
+                    const scale = 300 / (300 + z); 
+                    const screenX = width * 0.75 + x * scale; 
+                    const screenY = height / 2 + y * scale;
+
+                    const alpha = (z + this.radius) / (2 * this.radius); 
+                    
+                    if (alpha > 0) {
+                        ctx.fillStyle = `rgba(189, 233, 255, ${alpha})`; 
+                        ctx.beginPath();
+                        ctx.arc(screenX, screenY, 1.2 * scale, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                }
+            }
+            
+             class Star {
+                constructor() {
+                    this.x = Math.random() * width;
+                    this.y = Math.random() * height;
+                    this.size = Math.random() * 1.5;
+                    this.blinkSpeed = 0.02 + Math.random() * 0.05;
+                    this.alpha = Math.random();
+                    this.direction = Math.random() > 0.5 ? 1 : -1;
+                }
+                update() {
+                    this.alpha += this.blinkSpeed * this.direction;
+                    if (this.alpha >= 1 || this.alpha <= 0.2) this.direction *= -1;
+                    ctx.fillStyle = `rgba(255, 255, 255, ${this.alpha})`;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            class Meteor {
+                constructor() { this.reset(); }
+                reset() {
+                    this.x = Math.random() * width + width; 
+                    this.y = Math.random() * height * 0.5;
+                    this.length = 50 + Math.random() * 50;
+                    this.speed = 4 + Math.random() * 3; 
+                    this.angle = Math.PI / 1.2; 
+                    this.active = false;
+                    setTimeout(() => { this.active = true; }, Math.random() * 5000);
+                }
+                draw() {
+                    if (!this.active) return;
+                    this.x -= this.speed;
+                    this.y += this.speed * 0.6;
+                    const tailX = this.x + this.length * 0.8;
+                    const tailY = this.y - this.length * 0.5;
+                    const gradient = ctx.createLinearGradient(this.x, this.y, tailX, tailY);
+                    gradient.addColorStop(0, 'rgba(255,255,255,1)');
+                    gradient.addColorStop(1, 'rgba(255,255,255,0)');
+                    ctx.strokeStyle = gradient;
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.moveTo(this.x, this.y);
+                    ctx.lineTo(tailX, tailY);
+                    ctx.stroke();
+                    if (this.x < -100 || this.y > height + 100) { this.reset(); }
+                }
+            }
+
+            function init() {
+                particles = [];
+                stars = [];
+                meteors = [];
+                for (let i = 0; i < numParticles; i += 1) particles.push(new Particle());
+                for (let i = 0; i < numStars; i += 1) stars.push(new Star());
+                for (let i = 0; i < numMeteors; i += 1) meteors.push(new Meteor());
+            }
+
+            function drawFrame() {
+                ctx.clearRect(0, 0, width, height);
+                stars.forEach((s) => s.update());
+                meteors.forEach((m) => m.draw());
+
+                targetRotationY += 0.002;
+                const ease = 0.05;
+                rotationY += (targetRotationY + mouseX * 0.5 - rotationY) * ease;
+                rotationX += (mouseY * 0.5 - rotationX) * ease;
+
+                particles.forEach((p) => p.draw(rotationX, rotationY));
+            }
+
+            function shouldAnimate() {
+                return isVisible && isInViewport && !prefersReducedMotion;
+            }
+
+            function animate(now) {
+                if (!shouldAnimate()) {
+                    rafId = null;
+                    return;
+                }
+
+                if (now - lastFrameTime >= frameInterval) {
+                    lastFrameTime = now;
+                    drawFrame();
+                }
+                rafId = requestAnimationFrame(animate);
+            }
+
+            function startAnimation() {
+                if (rafId !== null) return;
+                lastFrameTime = 0;
+                rafId = requestAnimationFrame(animate);
+            }
+
+            function stopAnimation() {
+                if (rafId === null) return;
+                cancelAnimationFrame(rafId);
+                rafId = null;
+            }
+
+            function syncAnimationState() {
+                if (shouldAnimate()) startAnimation();
+                else {
+                    stopAnimation();
+                    drawFrame();
+                }
+            }
+
+            document.addEventListener('visibilitychange', () => {
+                isVisible = !document.hidden;
+                syncAnimationState();
+            });
+
+            if ('IntersectionObserver' in window && skyContainer) {
+                const observer = new IntersectionObserver((entries) => {
+                    const entry = entries[0];
+                    isInViewport = !!entry && entry.isIntersecting;
+                    syncAnimationState();
+                }, { threshold: 0.05 });
+                observer.observe(skyContainer);
+            }
+
+            resize();
+            syncAnimationState();
+        }
+
+        const moodboard = document.getElementById('fixed-bg');
+        if (moodboard) {
+            const updateMoodboardReveal = () => {
+                const scrollTop = window.scrollY;
+                const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const scrollPercent = docHeight > 0
+                    ? Math.max(0, Math.min(1, scrollTop / docHeight))
+                    : 1;
+
+                let targetOpacity = 0;
+                let targetBlur = 20;
+                let targetGrayscale = 100;
+
+                if (scrollPercent > 0.6) {
+                    const revealProgress = (scrollPercent - 0.6) / 0.4;
+                    targetOpacity = revealProgress;
+                    targetBlur = 20 * (1 - revealProgress);
+                    targetGrayscale = 100 * (1 - revealProgress);
+
+                    if (scrollPercent >= 0.98) {
+                        targetOpacity = 1;
+                        targetBlur = 0;
+                        targetGrayscale = 0;
+                    }
+                } else {
+                    targetOpacity = scrollPercent * 0.1;
+                }
+
+                moodboard.style.opacity = String(targetOpacity);
+                moodboard.style.filter = `blur(${targetBlur}px) grayscale(${targetGrayscale}%)`;
+            };
+
+            window.addEventListener('scroll', updateMoodboardReveal, { passive: true });
+            window.addEventListener('resize', updateMoodboardReveal);
+            updateMoodboardReveal();
+        }
+
+        const heroTypeLines = Array.from(document.querySelectorAll('.hero-type-text'));
+        if (heroTypeLines.length) {
+            const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const lines = heroTypeLines.map((node) => ({ node, text: node.dataset.text || node.textContent || '' }));
+
+            if (!reducedMotion) {
+                lines.forEach(({ node }) => { node.textContent = ''; });
+                const charsPerSecond = 24;
+
+                const typeLine = (node, text) => new Promise((resolve) => {
+                    let lastLength = -1;
+                    let startTime = 0;
+                    node.classList.add('is-typing');
+
+                    const step = (timestamp) => {
+                        if (!startTime) startTime = timestamp;
+                        const elapsed = timestamp - startTime;
+                        const currentLength = Math.min(text.length, Math.floor((elapsed / 1000) * charsPerSecond));
+
+                        if (currentLength !== lastLength) {
+                            node.textContent = text.slice(0, currentLength);
+                            lastLength = currentLength;
+                        }
+
+                        if (currentLength < text.length) {
+                            requestAnimationFrame(step);
+                        } else {
+                            node.classList.remove('is-typing');
+                            resolve();
+                        }
+                    };
+
+                    requestAnimationFrame(step);
+                });
+
+                (async () => {
+                    for (const { node, text } of lines) {
+                        await typeLine(node, text);
+                        await new Promise((resolve) => setTimeout(resolve, 120));
+                    }
+                })();
+            } else {
+                lines.forEach(({ node, text }) => { node.textContent = text; });
+            }
+        }
+    </script>
+
+</body>
+</html>
