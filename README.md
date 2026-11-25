@@ -1,1 +1,1 @@
-I love coding and building products.
+I love coding.
